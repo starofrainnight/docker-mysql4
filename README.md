@@ -5,15 +5,15 @@ A docker image for MySQL4
 Though there exists new MySQL distributions just like MySQL5, MySQL6, there
 still have lots mature program needs a MySQL4 environment.
 
-I think MySQL4 is too old to compile as 64bits, at least I don't think it will
-works perfectly while compile in 64bits mode, so we build this MySQL4 in
-64bits docker image with 32bits gcc mode to ensure it will less problem when
-running.
+I think MySQL4 is too old to compile as 64-bits program, at least I don't
+think it will works perfectly when compiled as 64-bits, so we build this MySQL4
+in 64-bits docker image with 32-bits gcc mode to ensure it will less problem
+when running.
 
 ## Features
 
 - Base on Ubuntu:18.04 LTS image
-- Build MySQL4 with 32bits mode, for avoid problems if build with 64bits gcc
+- Build MySQL4 with 32-bits mode, for avoid problems if build with 64-bits gcc
 
 ## Usage
 
