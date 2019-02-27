@@ -47,6 +47,7 @@ So the directory structure looks like:
 Here are environment variables that could be set to change internal behaviors:
 
 - TZ : The time zone settings
+- MYSQL_ROOT_PASSWORD: Password of root user
 
 ## Acknowledgement
 
