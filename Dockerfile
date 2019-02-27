@@ -14,7 +14,6 @@ RUN chmod a+x /opt/docker-mysql4/*.sh
 
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
-RUN cat /etc/apt/sources.list
 RUN apt-get update --fix-missing
 RUN apt-get install -y --fix-missing apt-utils tzdata locales-all \
     python3 python3-distutils python3-distutils-extra \
@@ -44,8 +43,8 @@ RUN python3 ./build-mysql.py
 
 # Clean up
 WORKDIR /opt/docker-mysql4
-RUN rm -rf /tmp/build
 RUN cp -rf /tmp/build/mysql/support-files/ /opt/docker-mysql4/
+RUN rm -rf /tmp/build
 
 RUN apt-get purge -y git build-essential lib32ncurses5-dev
 RUN apt-get autoremove -y && apt-get clean
