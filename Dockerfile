@@ -45,6 +45,7 @@ RUN python3 ./build-mysql.py
 # Clean up
 WORKDIR /opt/docker-mysql4
 RUN rm -rf /tmp/build
+RUN cp -rf /tmp/build/mysql/support-files/ /opt/docker-mysql4/
 
 RUN apt-get purge -y git build-essential lib32ncurses5-dev
 RUN apt-get autoremove -y && apt-get clean

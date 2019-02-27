@@ -25,6 +25,15 @@ def main():
 
     os.system("chown -R mysql:mysql %s" % data_dir)
 
+    # Copy default config file to volume if user does not provided one
+    default_cnf_path = "/opt/docker-mysql4/support-files/my-medium.cnf"
+    src_cnf_path = "%s/conf/my.cnf" % data_dir
+    if not os.path.exists(src_cnf_path):
+        os.system("cp %s %s" % (default_cnf_path, src_cnf_path))
+
+    # Overwrite MySQL4 required config file
+    os.system("cp %s /etc/my.cnf" % src_cnf_path)
+
     try:
         have_file = os.listdir("%s/data" % data_dir)
     except FileNotFoundError:
@@ -36,9 +45,6 @@ def main():
 
         click.echo("Setting root password...")
         os.system("mysqld_safe --skip-networking &")
-
-        if os.path.exists("%s/conf/my.cnf" % data_dir):
-            os.system("cp %s/conf/my.cnf /etc/" % data_dir)
 
         time.sleep(5)
 
