@@ -8,6 +8,11 @@ still have lots mature program needs a MySQL4 environment.
 I think MySQL4 is too old for compile as 64bits, so we build this MySQL4 in
 64bits docker image with 32bits gcc mode to ensure there less problems.
 
+## Features
+
+- Base on Ubuntu:18.04 LTS image
+- Build MySQL4 with 32bits mode, for avoid problems if build with 64bits gcc
+
 ## Usage
 
 ```bash
@@ -51,6 +56,6 @@ Here are environment variables that could be set to change internal behaviors:
 
 ## Acknowledgement
 
-There are similar projects in docker-hub (Search by the keyword "mysql4"), mostly forked from ​[Thomas Dressler's mysql4 docker project](https://github.com/Tommi2Day/mysql4) .
+There are similar projects in docker-hub (Search by the keyword "mysql4"), mostly forked from [Thomas Dressler's mysql4 docker project](https://github.com/Tommi2Day/mysql4) .
 
 This project also inspired by his project, thanks!
