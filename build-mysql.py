@@ -55,7 +55,7 @@ def main():
 
     # Build MySQL4
     cmds = """
-    mkdir -p /var/lib/mysql/data /var/lib/mysql/conf
+    mkdir -p /var/lib/mysql/data /var/lib/mysql/log
     git clone --depth=1 https://github.com/starofrainnight/mysql-server4.git mysql
     """
     exec_batch(cmds)

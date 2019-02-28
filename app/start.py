@@ -8,6 +8,49 @@ import time
 import glob
 import os.path
 import subprocess
+from configparser import ConfigParser
+
+
+def safe_copy_mysql_conf(data_dir):
+    cfg = ConfigParser(allow_no_value=True)
+
+    # Copy default config file to volume if user does not provided one
+    default_cnf_path = "/opt/docker-mysql4/support-files/my-medium.cnf"
+    src_cnf_path = "%s/my.cnf" % data_dir
+    if not os.path.exists(src_cnf_path):
+        os.system("cp %s %s" % (default_cnf_path, src_cnf_path))
+
+    # Overwrite MySQL4 required config file
+    cfg.read([src_cnf_path])
+
+    if not cfg.has_section("mysqld"):
+        cfg.add_section("mysqld")
+
+    # Not allow specific server's port
+    if cfg.has_option("mysqld", "port"):
+        cfg.remove_option("mysqld", "port")
+
+    # Set log directory, force to "log"
+    if cfg.has_option("mysqld", "log-bin"):
+        value = cfg.get("mysqld", "log-bin")
+        if value and ((r"/" in value) or (r"\\" in value)):
+            # FIXME: Value of 'log-bin' could be 'ON' and specific format by option
+            # 'log_bin_basename' or 'log_bin_index'
+            basename = os.path.basename(value)
+            cfg.set("mysqld", "log-bin", "%s/log/%s" % (data_dir, basename))
+
+    # Set data directory, force to "data"
+    cfg.set("mysqld", "datadir", "%s/data/" % data_dir)
+
+    # Set innodata home directory, force to "data"
+    cfg.set("mysqld", "innodb_data_home_dir", "%s/data/" % data_dir)
+
+    # Not allow to modify mysql client's port!
+    if cfg.has_option("client", "port"):
+        cfg.remove_option("client", "port")
+
+    with open("/etc/my.cnf", "w") as f:
+        cfg.write(f)
 
 
 @click.command()
@@ -21,18 +64,10 @@ def main():
             f.write("127.0.0.1 %s\n" % hostname)
 
     os.makedirs("%s/data" % data_dir, exist_ok=True)
-    os.makedirs("%s/conf" % data_dir, exist_ok=True)
 
     os.system("chown -R mysql:mysql %s" % data_dir)
 
-    # Copy default config file to volume if user does not provided one
-    default_cnf_path = "/opt/docker-mysql4/support-files/my-medium.cnf"
-    src_cnf_path = "%s/conf/my.cnf" % data_dir
-    if not os.path.exists(src_cnf_path):
-        os.system("cp %s %s" % (default_cnf_path, src_cnf_path))
-
-    # Overwrite MySQL4 required config file
-    os.system("cp %s /etc/my.cnf" % src_cnf_path)
+    safe_copy_mysql_conf(data_dir)
 
     try:
         have_file = os.listdir("%s/data" % data_dir)

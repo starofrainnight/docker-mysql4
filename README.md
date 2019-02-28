@@ -29,25 +29,33 @@ docker run -it --rm  -p 3306:3306 -v /srv/mysql:/var/lib/mysql starofrainnight/m
 
 Data Directory: `/var/lib/mysql`
 
-If the data directory is empty, new sub-directories `data` and `conf` will be
+If the data directory is empty, new sub-directories `data` and `log` will be
 generated under the parent `mysql` directory.
 
-`data` directory stored mysql database file, and `conf` at least contained a
-config file for mysql4 : `my.conf` .
+`data` directory stored mysql database file, and `log` binary log files for
+MySQL4.
+
+A MySQL4 config file `my.conf` should be placed in directory `/var/lib/mysql`
 
 So the directory structure looks like:
 
     /var/lib/mysql
-        |
-        +---- data
-        |       |
-        |       +---- ...
-        |
-        +---- conf
-        |      |
-        |      +---- my.conf
-        |
-        ...
+    |
+    +---- data
+    |     |
+    |     +---- ...
+    |
+    +---- log
+    |     |
+    |     +---- ib_logfile0
+    |     |
+    |     +---- ib_logfile1
+    |     |
+    |     ...
+    |
+    +---- my.conf
+    |
+    ...
 
 ## Environment
 
