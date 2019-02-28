@@ -11,7 +11,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get update --fix-missing
-RUN apt-get install -y --fix-missing apt-utils tzdata locales-all \
+RUN apt-get install --no-install-recommends -y --fix-missing \
+    apt-utils tzdata locales-all \
     python3 python3-distutils python3-distutils-extra \
     build-essential gcc-multilib g++-multilib \
     lib32ncurses5 lib32ncurses5-dev libtool-bin \
@@ -37,8 +38,8 @@ RUN chmod +x *.py
 RUN python3 ./build-mysql.py
 
 # Removed unused packages
-RUN apt-get purge -y git build-essential lib32ncurses5-dev
-RUN apt-get autoremove -y && apt-get clean
+RUN apt-get purge -y --auto-remove git build-essential lib32ncurses5-dev
+RUN apt-get clean
 
 # Copy application files
 COPY app /opt/docker-mysql4/
