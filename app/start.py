@@ -67,6 +67,9 @@ def main():
 
     os.system("chown -R mysql:mysql %s" % data_dir)
 
+    # Ensure correct timezone
+    os.system("bash /opt/docker-mysql4/update-tz.sh")
+
     safe_copy_mysql_conf(data_dir)
 
     try:
