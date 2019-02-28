@@ -8,10 +8,6 @@ ENV PATH /usr/local/mysql/bin:$PATH
 # Disable interactive for tzdata or dpkg-reconfigure
 ENV DEBIAN_FRONTEND=noninteractive
 
-COPY app /opt/docker-mysql4/
-RUN chmod a+x /opt/docker-mysql4/*.py
-RUN chmod a+x /opt/docker-mysql4/*.sh
-
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get update --fix-missing
@@ -35,22 +31,26 @@ RUN groupadd -r mysql && useradd -r -g mysql mysql
 
 # Compile MySQL4 from source
 RUN mkdir -p /tmp/build
-COPY build-mysql.py /tmp/build/
-RUN chmod +x /tmp/build/*.py
-
 WORKDIR /tmp/build
+COPY build-mysql.py .
+RUN chmod +x *.py
 RUN python3 ./build-mysql.py
 
-# Clean up
-WORKDIR /opt/docker-mysql4
-RUN cp -rf /tmp/build/mysql/support-files/ /opt/docker-mysql4/
-RUN rm -rf /tmp/build
-
+# Removed unused packages
 RUN apt-get purge -y git build-essential lib32ncurses5-dev
 RUN apt-get autoremove -y && apt-get clean
+
+# Copy application files
+COPY app /opt/docker-mysql4/
+WORKDIR /opt/docker-mysql4
+RUN chmod a+x *.py
+RUN chmod a+x *.sh
+RUN cp -rf /tmp/build/mysql/support-files/ .
+
+# Clean up
+RUN rm -rf /tmp/build
 
 VOLUME ["/var/lib/mysql"]
 EXPOSE 3306
 
-WORKDIR /opt/docker-mysql4
 ENTRYPOINT [ "/usr/bin/python3", "start.py" ]
