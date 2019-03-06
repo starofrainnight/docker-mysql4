@@ -55,7 +55,7 @@ def main():
 
     # Build MySQL4
     cmds = """
-    mkdir -p /var/lib/mysql/data /var/lib/mysql/log
+    mkdir -p /var/lib/mysql
     git clone --depth=1 https://github.com/starofrainnight/mysql-server4.git mysql
     """
     exec_batch(cmds)
@@ -71,11 +71,10 @@ def main():
         )
 
     cmds = """
-    ./configure --localstatedir=/var/lib/mysql/data CFLAGS='-m32' CXXFLAGS='-m32'
+    ./configure --localstatedir=/var/lib/mysql CFLAGS='-m32' CXXFLAGS='-m32'
     make
     make install
     pwd
-    cp ./support-files/my-medium.cnf /etc/my.cnf
     """
     exec_batch(cmds)
 

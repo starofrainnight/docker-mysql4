@@ -46,12 +46,15 @@ COPY app /opt/docker-mysql4/
 WORKDIR /opt/docker-mysql4
 RUN chmod a+x *.py
 RUN chmod a+x *.sh
+COPY etc/mysql /etc/mysql
+COPY etc/my.cnf /etc/my.cnf
+RUN rm -f /etc/mysql/conf.d/*
 RUN cp -rf /tmp/build/mysql/support-files/ .
 
 # Clean up
 RUN rm -rf /tmp/build
 
-VOLUME ["/var/lib/mysql"]
+VOLUME ["/var/lib/mysql", "/etc/mysql/conf.d"]
 EXPOSE 3306
 
 ENTRYPOINT [ "/usr/bin/python3", "start.py" ]

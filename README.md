@@ -17,8 +17,10 @@ when running.
 
 ## Usage
 
+Place your `my.conf` to /opt/mysql/conf.d and run this sample command:
+
 ```bash
-docker run -it --rm  -p 3306:3306 -v /srv/mysql:/var/lib/mysql starofrainnight/mysql4
+docker run -it --rm -p 3306:3306 -v /srv/mysql:/var/lib/mysql -v /opt/mysql/conf.d:/etc/mysql/conf.d starofrainnight/mysql4
 ```
 
 ## Ports
@@ -29,33 +31,10 @@ docker run -it --rm  -p 3306:3306 -v /srv/mysql:/var/lib/mysql starofrainnight/m
 
 Data Directory: `/var/lib/mysql`
 
-If the data directory is empty, new sub-directories `data` and `log` will be
-generated under the parent `mysql` directory.
+Config Directory: `/etc/mysql/conf.d`
 
-`data` directory stored mysql database file, and `log` binary log files for
-MySQL4.
-
-A MySQL4 config file `my.conf` should be placed in directory `/var/lib/mysql`
-
-So the directory structure looks like:
-
-    /var/lib/mysql
-    |
-    +---- data
-    |     |
-    |     +---- ...
-    |
-    +---- log
-    |     |
-    |     +---- ib_logfile0
-    |     |
-    |     +---- ib_logfile1
-    |     |
-    |     ...
-    |
-    +---- my.conf
-    |
-    ...
+A MySQL4 config file `my.conf` should be placed in directory and map to
+`/etc/mysql/conf.d`
 
 ## Environment
 
