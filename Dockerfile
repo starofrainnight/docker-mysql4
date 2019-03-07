@@ -57,4 +57,5 @@ RUN rm -rf /tmp/build
 VOLUME ["/var/lib/mysql", "/etc/mysql/conf.d"]
 EXPOSE 3306
 
-ENTRYPOINT [ "/usr/bin/python3", "start.py" ]
+ENTRYPOINT [ "/usr/bin/python3", "entrypoint.py" ]
+CMD ["mysqld_safe"]

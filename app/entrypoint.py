@@ -18,8 +18,7 @@ def safe_copy_mysql_conf(data_dir):
         os.system("cp %s %s" % (default_cnf_path, "/etc/mysql/conf.d/"))
 
 
-@click.command()
-def main():
+def mysql_initialize():
     data_dir = "/var/lib/mysql"
     hostname = os.environ.get("HOSTNAME", "mysql4")
     password = os.environ.get("MYSQL_ROOT_PASSWORD", "mysql4")
@@ -28,7 +27,7 @@ def main():
         if not hostname in f.read():
             f.write("127.0.0.1 %s\n" % hostname)
 
-    os.makedirs("%s/data" % data_dir, exist_ok=True)
+    os.makedirs("%s" % data_dir, exist_ok=True)
 
     os.system("chown -R mysql:mysql %s" % data_dir)
 
@@ -38,7 +37,7 @@ def main():
     safe_copy_mysql_conf(data_dir)
 
     try:
-        have_file = os.listdir("%s/data" % data_dir)
+        have_file = os.listdir("%s" % data_dir)
     except FileNotFoundError:
         have_file = False
 
@@ -64,7 +63,7 @@ def main():
 
         time.sleep(5)
 
-        pid_files = glob.glob("%s/data/*.pid" % data_dir)
+        pid_files = glob.glob("%s/*.pid" % data_dir)
         if pid_files:
             pid_file_path = pid_files[0]
             with open(pid_file_path) as f:
@@ -74,8 +73,16 @@ def main():
 
             time.sleep(5)
 
-    subprocess.run(["mysqld_safe"])
+
+def main():
+    if len(sys.argv) <= 1:
+        return
+
+    if sys.argv[1] == "mysqld_safe":
+        mysql_initialize()
+
+    return subprocess.run(sys.argv[1:])
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
